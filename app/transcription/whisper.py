@@ -23,5 +23,3 @@ def transcribe_whisper_cpp(audio_path: str):
             print(f"[{enc}] failed:", e)
 
     return stdout
-
-print(transcribe_whisper_cpp(audio_path=r"C:\Users\timos\rsv_hackaton\meeting.wav"))
