@@ -6,6 +6,19 @@ __pycache__/
 # C extensions
 *.so
 
+whisper.cpp/build/
+whisper.cpp/.cache/
+
+whisper.cpp/models/*.bin
+whisper.cpp/models/*.gz
+
+*.wav
+*.webm
+*.mp3
+*.mp4
+
+audio_tab_recorder.py
+
 # Distribution / packaging
 .Python
 build/
