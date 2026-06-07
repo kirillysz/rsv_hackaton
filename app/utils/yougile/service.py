@@ -20,19 +20,30 @@ class YougileClient:
             resp.raise_for_status()
             return resp.json()
         
-    async def create_task(self, title: str, column_id: str, deadline: int, assigned=None):
-        return await self._request(
-            "POST",
-            "/tasks",
-            json={
-                "title": title,
-                "columnId": column_id,
-                "assigned": assigned or [],
-                "deadline": {
-                    "deadline": deadline
+    async def create_task(self, title: str, column_id: str, deadline: int | None = None, assigned=None):
+        if deadline is not None:
+            return await self._request(
+                "POST",
+                "/tasks",
+                json={
+                    "title": title,
+                    "columnId": column_id,
+                    "assigned": assigned or [],
+                    "deadline": {
+                        "deadline": deadline
+                    }
                 }
-            }
-        )
+            )
+        else:
+            return await self._request(
+                "POST",
+                "/tasks",
+                json={
+                    "title": title,
+                    "columnId": column_id,
+                    "assigned": assigned or []
+                }
+            )
     
     async def set_task_complete(self, task_id: str):
         return await self._request(
