@@ -33,7 +33,6 @@ class YouGileExecutor:
     async def _create_task(self, action: dict):
         return await self.client.create_task(
             title=action.get("title"),
-            column_id=action.get("column_id"),
             deadline=action.get("deadline"),
             assigned=action.get("assigned", [])
         )

@@ -1,4 +1,5 @@
 import asyncio
+from email.mime import text
 from app.utils.recorder_service import RecorderService
 from app.transcription.whisper import transcribe_whisper_cpp
 
@@ -14,7 +15,7 @@ async def main(url):
 
     print("DONE:", file)
     text = transcribe_whisper_cpp(audio_path=file)
-    print(text)
+    print(f"text = {text}")
 
     yc = YougileClient(token=settings.YOUGILE_TOKEN)
     llm = LLMService(model="qwen2.5:3b")
