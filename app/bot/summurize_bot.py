@@ -376,6 +376,10 @@ async def main():
             command="sync_now",
             description="Вечерний синхрон"
         ),
+        types.BotCommand(
+            command="telemost",
+            description="Запись созвона в Телемост"
+        )
     ])
 
     dp.include_router(router)

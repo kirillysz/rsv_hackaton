@@ -16,15 +16,53 @@ cmake -B build && cmake --build build --config Release
 bash whisper.cpp/models/download-ggml-model.sh large-v3-turbo
 ```
 
-### 4. Установить зависимости Python
+### 4. Установка uv
+macOS / Linux
+```bash
+curl -Ls https://astral.sh/uv/install.sh | sh
+```
+Windows (PowerShell)
+```bash
+irm https://astral.sh/uv/install.ps1 | iex
+```
+
+### 5. Установить зависимости Python
 ```bash
 uv sync
 ```
 
-### 5. Установить ffmpeg
+Если виртуальное окружение ещё не создано:
+```bash
+uv venv
+uv sync
+```
+### 6. Активировать окружение (если нужно вручную):
+macOS / Linux
+```bash
+source .venv/bin/activate
+```
+Windows (PowerShell)
+```bash
+.venv\Scripts\Activate.ps1
+```
+
+### 7. Установить ffmpeg
+Ubuntu / Debian
+```bash
+sudo apt update
+sudo apt install ffmpeg
+```
+
+macOS
+```bash
+brew install ffmpeg
+```
+
+Windows (Chocolatey)
 ```bash
 choco install ffmpeg
 ```
+
 Или скачать вручную
 https://ffmpeg.org/download.html
 
@@ -36,14 +74,11 @@ COLUMN_ID=column_id
 BOT_TOKEN=bot_token
 FORUM_CHAT_ID=forum_chat_id
 FORUM_THREAD_ID=forum_thread_id
+FORUM_SYNC_ID=forumn_chat_sync_id
+FORUM_SYNC_THREAD_ID=forum_sync_thread_id
 ```
 
 ## ▶️ Запуск
-#### Запуск Yandex Telemost bot'a:
-```bash
-python telemost_run.py
-```
-
 #### Запуск Telegram-бота:
 ```bash
 python run_bot.py
