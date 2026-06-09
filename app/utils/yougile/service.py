@@ -56,3 +56,12 @@ class YougileClient:
             }
         )
     
+    async def get_tasks(self, column_id: str) -> list[dict]:
+        data = await self._request(
+            "GET",
+            f"/task-list",
+            json={
+                "column_id": column_id
+            }
+        )
+        return data.get("content", [])

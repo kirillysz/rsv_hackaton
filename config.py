@@ -7,6 +7,9 @@ class Settings(BaseSettings):
     FORUM_CHAT_ID: int = 0
     FORUM_THREAD_ID: int = 0
 
+    FORUM_SYNC_ID: int = 0
+    FORUM_SYNC_THREAD_ID: int = 0
+
     model_config = SettingsConfigDict(env_file=".env")
 
 settings = Settings()

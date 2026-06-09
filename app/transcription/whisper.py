@@ -82,3 +82,4 @@ def transcribe_whisper_cpp(audio_path: str) -> str:
     os.unlink(processed_path)
 
     return clean_transcription(text)
+

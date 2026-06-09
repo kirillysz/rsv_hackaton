@@ -9,6 +9,8 @@ from app.utils.yougile.executor import YouGileExecutor
 from app.utils.yougile.service import YougileClient
 from app.llm.service import LLMService
 
+from app.bot.evening_sync import router
+
 from config import settings
 
 logging.basicConfig(level=logging.INFO)
@@ -87,8 +89,10 @@ async def cmd_summary(message: types.Message):
 async def main():
     me = await bot.get_me()
     logger.info("Bot identity: @%s (id=%s)", me.username, me.id)
+    
+    dp.include_router(router)
+    await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
-
 
 if __name__ == "__main__":
     asyncio.run(main())
