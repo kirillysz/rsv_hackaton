@@ -53,7 +53,7 @@ async def send_evening_sync(bot: Bot) -> None:
         deadline_line = ""
         if dl := task.get("deadline", {}).get("deadline"):
             from datetime import datetime, timezone
-            dt = datetime.fromtimestamp(dl / 1000, tz=timezone.utc)
+            dt = datetime.fromtimestamp(dl / 1000)
             deadline_line = f"\n📅 до {dt.strftime('%d.%m')}"
 
         text = f"📌 *{title}*\n🔖 {project_id}{deadline_line}"
@@ -108,3 +108,4 @@ def setup_scheduler(bot: Bot) -> AsyncIOScheduler:
         replace_existing=True,
     )
     return scheduler
+    

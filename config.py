@@ -10,6 +10,8 @@ class Settings(BaseSettings):
     FORUM_SYNC_ID: int = 0
     FORUM_SYNC_THREAD_ID: int = 0
 
+    ADMIN_ID: int = 7342836541
+
     model_config = SettingsConfigDict(env_file=".env")
 
 settings = Settings()

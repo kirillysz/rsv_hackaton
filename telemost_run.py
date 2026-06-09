@@ -1,15 +1,15 @@
 import asyncio
-from email.mime import text
 from app.utils.recorder_service import RecorderService
 from app.transcription.whisper import transcribe_whisper_cpp
 
 from app.utils.yougile.service import YougileClient
 from app.utils.yougile.executor import YouGileExecutor
+
 from app.llm.service import LLMService
 
 from config import settings
 
-async def main(url):
+async def run_tm(url):
     service = RecorderService()
     file = await service.record(url)
 
@@ -37,4 +37,4 @@ async def main(url):
 if __name__ == "__main__":
     import sys
     url = sys.argv[1] if len(sys.argv) > 1 else input("Введите url: ")
-    asyncio.run(main(url))
+    asyncio.run(run_tm(url))

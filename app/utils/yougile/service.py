@@ -65,3 +65,24 @@ class YougileClient:
             }
         )
         return data.get("content", [])
+
+    async def get_task(self, task_id: str) -> list[dict]:
+        data = await self._request(
+            "GET",
+            f"/tasks/{ task_id}"
+        )
+        return data
+
+    async def delete_task(self, task_id: str) -> None:
+        await self._request(
+            "DELETE",
+            f"/tasks/{task_id}",
+        )
+
+
+    async def get_user(self, user_id: str) -> list[dict]:
+        data = await self._request(
+            "GET",
+            f"/users/{user_id}"
+        )
+        return data
