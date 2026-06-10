@@ -1,6 +1,7 @@
 import asyncio
 import html
 import logging
+import re
 import uuid
 from datetime import datetime
 
@@ -91,49 +92,42 @@ def format_deadline(deadline_value):
 
 
 def build_preview_text(parsed: dict) -> str:
-    tasks = parsed.get("tasks", [])
+    actions = parsed.get("actions", [])
 
     text = "📋 <b>Задачи из встречи</b>\n\n"
 
-    if not tasks:
+    if not actions:
         text += "Задачи не найдены."
         return text
 
-    for i, task in enumerate(tasks, start=1):
+    task_num = 1
+    for action in actions:
+        action_type = action.get("type")
 
-        title = html.escape(
-            task.get("title", "Без названия")
-        )
+        if action_type == "create_task":
+            title = html.escape(action.get("title", "Без названия"))
+            deadline = format_deadline(action.get("deadline"))
+            assigned = action.get("assigned", [])
+            assigned_text = ", ".join(assigned) if assigned else "Не назначен"
+            description = html.escape(action.get("description", ""))
 
-        description = html.escape(
-            task.get("description", "")
-        )
+            text += (
+                f"<b>{task_num}. {title}</b>\n"
+                f"👤 Ответственный: {assigned_text}\n"
+                f"📅 Дедлайн: {deadline}\n"
+            )
 
-        deadline = format_deadline(
-            task.get("deadline")
-        )
+            if description:
+                text += f"📝 {description}\n"
 
-        assigned = task.get("assigned", [])
+            text += "\n"
+            task_num += 1
 
-        assigned_text = (
-            ", ".join(assigned)
-            if assigned
-            else "Не назначен"
-        )
-
-        text += (
-            f"<b>{i}. {title}</b>\n"
-            f"👤 Ответственный: {assigned_text}\n"
-            f"📅 Дедлайн: {deadline}\n"
-        )
-
-        if description:
-            text += f"📝 {description}\n"
-
-        text += "\n"
+        elif action_type == "set_task_complete":
+            task_id = html.escape(action.get("task_id", ""))
+            text += f"✅ <i>Отметить задачу выполненной: <code>{task_id}</code></i>\n\n"
 
     return text
-
 
 async def notify_admin(
     approval_id: str,
@@ -244,7 +238,7 @@ async def cmd_summary(message: types.Message):
 
     message_buffer.clear()
 
-@router.message(Command("telemost"))
+@dp.message(Command("telemost"))
 async def telemost_start(message: types.Message):
     user_states[message.from_user.id] = "waiting_url"
     await message.answer("Пришли URL для обработки 🎥")
@@ -253,7 +247,6 @@ async def telemost_start(message: types.Message):
 async def handle_telemost_url(message: types.Message):
     user_id = message.from_user.id
     url = message.text.strip()
-
     user_states[user_id] = None
 
     await message.answer("Принял URL, начинаю обработку... ⏳")
@@ -263,8 +256,20 @@ async def handle_telemost_url(message: types.Message):
 
         result = await run_tm(url)
 
+        task_id = result[0].get("id") if isinstance(result, list) else result.get("id")
+        task = await yc.get_task(task_id=task_id) 
+
+        title       = task.get("title", "Без названия")
+        deadline    = format_deadline(task.get("deadline"))
+        assigned    = task.get("assigned", [])
+        assigned_text = ", ".join(assigned) if assigned else "Не назначен"
+        label       = task.get("idTaskProject") or task.get("idTaskCommon", "")
+
         await message.answer(
-            f"Готово ✅\n\n<code>{result}</code>",
+            f"Готово ✅\n\n"
+            f"<b>{label}: {html.escape(title)}</b>\n"
+            f"👤 Ответственный: {html.escape(assigned_text)}\n"
+            f"📅 Дедлайн: {deadline}",
             parse_mode="HTML"
         )
 

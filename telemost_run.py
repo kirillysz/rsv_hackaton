@@ -34,6 +34,8 @@ async def run_tm(url):
     print("\n===== EXECUTOR RESULT =====\n")
     print(exec_result)
 
+    return exec_result
+
 if __name__ == "__main__":
     import sys
     url = sys.argv[1] if len(sys.argv) > 1 else input("Введите url: ")
